@@ -5,6 +5,7 @@ import HomePage from './routes/HomePage';
 import SingleTodo from "./routes/SingleTodo";
 import AllTodos from "./routes/AllTodos";
 
+
 function App() {
     return (
         <>
@@ -19,7 +20,7 @@ function App() {
                 </Routes>
             </main>
 
-            <Footer/>
+            {/*<Footer/>*/}
         </>
     );
 }

@@ -3,21 +3,19 @@ import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import TodoForm from "../components/TodoForm";
 import {useState} from "react";
-import {useEffect} from "react";
 import TodoItem from "../components/TodoItem";
+import Storage from "../utils/Storage";
 
 
 const HomePage = () => {
-    const data = JSON.parse(localStorage.getItem('todoForm') ) || []
+    const data = Storage.getItems() || []
     const [todoItems, setTodoItems] = useState([...data]);
-
 
     const createTodoItem = todoItem => {
 
-        const localTodoItems = [todoItem, ...todoItems];
-        setTodoItems(localTodoItems);
+        const newState = Storage.setItem(todoItem)
 
-        localStorage.setItem('todoForm', JSON.stringify(localTodoItems));
+        setTodoItems(newState);
     }
 
 
@@ -34,9 +32,10 @@ const HomePage = () => {
                     <Col xs={8}>
                         <Row>
                             {todoItems.map(
-                                ({title, description}, index) => (
+                                ({title, description, id}, index) => (
                                     <TodoItem
                                         key={index}
+                                        id={id}
                                         title={title}
                                         description={description}
                                     />

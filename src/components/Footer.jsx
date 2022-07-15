@@ -1,7 +1,7 @@
 import Container from "react-bootstrap/Container";
 
 const styles = {
-    position: 'absolute',
+    position: 'fixed',
     bottom: '0',
     width: '100%',
     color: 'white',
