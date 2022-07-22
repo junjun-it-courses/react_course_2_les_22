@@ -4,12 +4,15 @@ import {Routes, Route} from "react-router-dom";
 import HomePage from './routes/HomePage';
 import SingleTodo from "./routes/SingleTodo";
 import AllTodos from "./routes/AllTodos";
+import Counter from './components/Counter';
 
 
 function App() {
     return (
         <>
             <Header/>
+
+            <Counter />
 
             <main>
                 <Routes>
