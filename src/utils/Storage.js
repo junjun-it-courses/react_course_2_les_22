@@ -1,6 +1,8 @@
 class Storage {
     #dbName = 'todoForm';
     id = 1;
+    delay = 1500;
+
 
     constructor() {
         try {
@@ -15,7 +17,7 @@ class Storage {
             const data = await this.getItems();
             if(!data) return;
 
-            this.id = data.at(-1).id + 1;
+            this.id = data.at(0).id + 1;
         } catch (e) {
             console.log(e);
         }
@@ -28,7 +30,7 @@ class Storage {
                     resolve(
                         JSON.parse(localStorage.getItem(this.#dbName))
                     )
-                }, 500
+                }, this.delay
             )
         })
     }

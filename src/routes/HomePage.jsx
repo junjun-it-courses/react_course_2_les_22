@@ -5,10 +5,11 @@ import TodoForm from "../components/TodoForm";
 import {useEffect, useState} from "react";
 import TodoItem from "../components/TodoItem";
 import Storage from "../utils/Storage";
-
+import withLoader from "../hoc/withLoader";
 
 const HomePage = () => {
     const [todoItems, setTodoItems] = useState([]);
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
 
@@ -24,17 +25,42 @@ const HomePage = () => {
             if(Array.isArray(dataFromStorage) && dataFromStorage.length) {
                 setTodoItems(dataFromStorage)
             }
+
+            setIsLoading(false);
         }
 
         fetchData();
 
     }, [])
 
-
     const createTodoItem = async todoItem => {
+        setIsLoading(true);
         const newState = await Storage.setItem(todoItem)
         setTodoItems(newState);
+
+        setIsLoading(false);
     }
+
+    const getTodos = () => {
+        return (
+            <Row>
+                {todoItems.map(
+                    ({title, description, id}, index) => (
+                        <TodoItem
+                            key={index}
+                            id={id}
+                            title={title}
+                            description={description}
+                        />
+                    )
+                )}
+            </Row>
+        )
+    }
+
+    const FormWithLoader = withLoader(TodoForm, isLoading);
+    const TodoWithLoader = withLoader(getTodos, isLoading);
+
 
     return (
         <>
@@ -43,22 +69,11 @@ const HomePage = () => {
             <Container>
                 <Row>
                     <Col xs={4}>
-                        <TodoForm handleSubmit={createTodoItem} />
+                        <FormWithLoader handleSubmit={createTodoItem} />
                     </Col>
 
                     <Col xs={8}>
-                        <Row>
-                            {todoItems.map(
-                                ({title, description, id}, index) => (
-                                    <TodoItem
-                                        key={index}
-                                        id={id}
-                                        title={title}
-                                        description={description}
-                                    />
-                                )
-                            )}
-                        </Row>
+                        <TodoWithLoader />
                     </Col>
                 </Row>
             </Container>
