@@ -2,22 +2,39 @@ import Container from "react-bootstrap/Container";
 import Col from "react-bootstrap/Col";
 import Row from "react-bootstrap/Row";
 import TodoForm from "../components/TodoForm";
-import {useState} from "react";
+import {useEffect, useState} from "react";
 import TodoItem from "../components/TodoItem";
 import Storage from "../utils/Storage";
 
 
 const HomePage = () => {
-    const data = Storage.getItems() || []
-    const [todoItems, setTodoItems] = useState([...data]);
+    const [todoItems, setTodoItems] = useState([]);
 
-    const createTodoItem = todoItem => {
+    useEffect(() => {
 
-        const newState = Storage.setItem(todoItem)
+        const fetchData = async () => {
+            let dataFromStorage = [];
 
+            try {
+                dataFromStorage = await Storage.getItems()
+            } catch (e) {
+                console.log(e)
+            }
+
+            if(Array.isArray(dataFromStorage) && dataFromStorage.length) {
+                setTodoItems(dataFromStorage)
+            }
+        }
+
+        fetchData();
+
+    }, [])
+
+
+    const createTodoItem = async todoItem => {
+        const newState = await Storage.setItem(todoItem)
         setTodoItems(newState);
     }
-
 
     return (
         <>

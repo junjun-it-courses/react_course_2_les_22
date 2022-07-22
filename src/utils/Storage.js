@@ -3,26 +3,42 @@ class Storage {
     id = 1;
 
     constructor() {
-        this.#getId();
+        try {
+            this.#getId();
+        } catch (e) {
+            console.log(e)
+        }
     }
 
-    #getId() {
-        const data =  this.getItems();
-        if(!data) return;
+    async #getId() {
+        try {
+            const data = await this.getItems();
+            if(!data) return;
 
-        this.id = this.getItems().at(-1).id + 1;
+            this.id = data.at(-1).id + 1;
+        } catch (e) {
+            console.log(e);
+        }
     }
 
     getItems() {
-        return JSON.parse(localStorage.getItem(this.#dbName));
+        return new Promise(resolve => {
+            setTimeout(
+                () => {
+                    resolve(
+                        JSON.parse(localStorage.getItem(this.#dbName))
+                    )
+                }, 500
+            )
+        })
     }
 
-    setItem(todoItem) {
+    async setItem(todoItem) {
         const localTodoItem = {...todoItem};
 
         if(typeof localTodoItem !== 'object') throw new Error('Should be an Object data type')
 
-        const existingItems = this.getItems();
+        const existingItems = await this.getItems();
 
         const dataToSave = existingItems ? existingItems : [];
 
@@ -34,7 +50,7 @@ class Storage {
 
         dataToSave.unshift(currentTodo);
 
-        localStorage.setItem(
+        await localStorage.setItem(
             this.#dbName,
             JSON.stringify(dataToSave)
         );
